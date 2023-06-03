@@ -280,7 +280,10 @@ def main_menu():
                 if key == ord('q'):
                     break
 
+    start = time.time()
     while True:
+        if time.time() - start > 15:
+            main_menu()
         ret, raw_frame = read_frame(web_cap)
         if not ret:
             web_cap.release()
@@ -411,8 +414,7 @@ def play_game():
             if key == ord('q'):
                 break
 
-    f_count = 0
-    while f_count < 75:
+    while True:
         ret, raw_frame = read_frame(web_cap)
         # Display the final score in the center of the screen
         if score > high_score:
@@ -422,19 +424,19 @@ def play_game():
             cv2.putText(raw_frame, f'Final Score: {score}', (100, int(web_height / 2)), font,
                         2, (0, 0, 255), 5)
 
-        output(raw_frame)
+        left_palm_x, left_palm_y, right_palm_x, right_palm_y, annotated_frame, hands_up = keypoints(raw_frame)
+        if menu_button.check_touch(left_palm_x, left_palm_y, right_palm_x, right_palm_y):
+            if score > high_score:
+                high_score = score
+            main_menu()
+        annotated_frame = menu_button.render(raw_frame)
+
+        output(annotated_frame)
 
         # Check for key press
         key = cv2.waitKey(1)
         if key == ord('q'):
             break
-
-        f_count += 1
-
-    if score > high_score:
-        high_score = score
-
-    main_menu()
 
 
 class Button:
@@ -503,6 +505,7 @@ if __name__ == '__main__':
     game_button = Button((228, 319), 'Game')
     present_button = Button((180, 169), 'PRESENT')
     back_button = Button((465, 50), 'BACK')
+    menu_button = Button((228, 319), 'Menu')
 
     left_palm_inside = False
     right_palm_inside = False
