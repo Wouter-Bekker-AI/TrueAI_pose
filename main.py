@@ -1,10 +1,11 @@
+import os.path
 import cv2
 import torch
 import random
 import time
 from ultralytics import YOLO
 
-#test
+#test2
 # Load YOLOv8 model
 model = YOLO('yolov8l-pose.pt')
 
@@ -259,24 +260,25 @@ def output(frame):
 def main_menu():
     global web_cap, video_cap
 
-    while True:
-        ret, raw_frame = read_frame(web_cap)
-        ret_2, raw_frame_2 = read_frame(video_cap, flip=False)
-        if not ret_2:
-            video_cap.release()
-            video_cap, fps_2, width_2, height_2 = open_video_capture(video_path, webcam=False)
+    if video_cap:
+        while True:
+            ret, raw_frame = read_frame(web_cap)
             ret_2, raw_frame_2 = read_frame(video_cap, flip=False)
+            if not ret_2:
+                video_cap.release()
+                video_cap, fps_2, width_2, height_2 = open_video_capture(video_path, webcam=False)
+                ret_2, raw_frame_2 = read_frame(video_cap, flip=False)
 
-        left_palm_x, left_palm_y, right_palm_x, right_palm_y, annotated_frame, hands_up = keypoints(raw_frame)
-        if hands_up:
-            break
-        else:
-            output(raw_frame_2)
-
-            # Check for key press
-            key = cv2.waitKey(1)
-            if key == ord('q'):
+            left_palm_x, left_palm_y, right_palm_x, right_palm_y, annotated_frame, hands_up = keypoints(raw_frame)
+            if hands_up:
                 break
+            else:
+                output(raw_frame_2)
+
+                # Check for key press
+                key = cv2.waitKey(1)
+                if key == ord('q'):
+                    break
 
     while True:
         ret, raw_frame = read_frame(web_cap)
@@ -513,6 +515,9 @@ if __name__ == '__main__':
 
     # Open video capture device
     web_cap, web_fps, web_width, web_height = open_video_capture(webcam_path, webcam=True)
-    video_cap, video_fps, video_width, video_height = open_video_capture(video_path, webcam=False)
+    if os.path.isfile(f'Exhibition_trial_0.mp4'):
+        video_cap, video_fps, video_width, video_height = open_video_capture(video_path, webcam=False)
+    else:
+        video_cap = None
 
     main_menu()
