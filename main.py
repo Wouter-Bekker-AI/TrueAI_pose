@@ -5,7 +5,7 @@ import random
 import time
 from ultralytics import YOLO
 
-#test2
+
 # Load YOLOv8 model
 model = YOLO('yolov8l-pose.pt')
 
