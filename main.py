@@ -18,13 +18,7 @@ model.to(device)
 def open_video_capture(video_path, webcam):
     # Open video capture device
     if webcam:
-        '''cap = cv2.VideoCapture(video_path)
-        codec = cv2.VideoWriter_fourcc(*'MJPG')
-        cap.set(cv2.CAP_PROP_FPS, 30)
-        cap.set(cv2.CAP_PROP_FOURCC, codec)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)'''
-
+        #cap = cv2.VideoCapture(video_path)
         cap = cv2.VideoCapture(video_path, cv2.CAP_DSHOW)
         codec = cv2.VideoWriter_fourcc(*'MJPG')
         #codec = 0x47504A4D  # MJPG
@@ -275,10 +269,10 @@ def main_menu():
             else:
                 output(raw_frame_2)
 
-                # Check for key press
-                key = cv2.waitKey(1)
-                if key == ord('q'):
-                    break
+            # Check for key press
+            key = cv2.waitKey(1)
+            if key == ord('q'):
+                break
 
     start = time.time()
     while True:
